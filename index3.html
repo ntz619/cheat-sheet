@@ -1,0 +1,1097 @@
+<!doctype html>
+<html lang="de" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Ausführliches Flutter-Cheat-Sheet: Übersetzung der Vorlesungskonzepte auf Flutter und die CampusMensa-App.">
+  <title>Flutter Cheat-Sheet · Skript → Flutter → CampusMensa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Literata:opsz,wght@7..72,600;7..72,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #f4f0e6;
+      --paper-2: #ebe5d7;
+      --card: #fffdf7;
+      --ink: #1d2824;
+      --muted: #5d6862;
+      --line: #c8c0ad;
+      --green: #164b3b;
+      --green-2: #2f725c;
+      --terracotta: #b85136;
+      --gold: #c68a18;
+      --blue: #356c82;
+      --red: #9c3b35;
+      --code: #17231f;
+      --code-ink: #e9f3ec;
+      --shadow: 0 14px 36px rgba(38, 43, 35, 0.10);
+      --radius: 18px;
+      --sans: "DM Sans", system-ui, sans-serif;
+      --serif: "Literata", Georgia, serif;
+      --mono: "DM Mono", Consolas, monospace;
+    }
+
+    html[data-theme="dark"] {
+      --paper: #121816;
+      --paper-2: #18211e;
+      --card: #1d2824;
+      --ink: #edf2ea;
+      --muted: #adbab2;
+      --line: #3b4942;
+      --green: #75c2a2;
+      --green-2: #8fd6ba;
+      --terracotta: #ef8f72;
+      --gold: #e7b450;
+      --blue: #7fc0d8;
+      --red: #f18b83;
+      --code: #0a0f0d;
+      --code-ink: #e9f3ec;
+      --shadow: 0 14px 36px rgba(0, 0, 0, 0.28);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(rgba(22, 75, 59, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(22, 75, 59, 0.035) 1px, transparent 1px),
+        var(--paper);
+      background-size: 28px 28px;
+      font-family: var(--sans);
+      line-height: 1.62;
+    }
+
+    a { color: inherit; }
+    button, input { font: inherit; }
+    button { color: inherit; }
+    code, pre { font-family: var(--mono); }
+    :focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+
+    .skip-link {
+      position: fixed; top: 10px; left: 10px; z-index: 100;
+      transform: translateY(-150%); background: var(--ink); color: var(--paper);
+      padding: .65rem 1rem; border-radius: 10px;
+    }
+    .skip-link:focus { transform: none; }
+
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; align-items: center; gap: 1rem;
+      min-height: 62px; padding: .65rem clamp(1rem, 3vw, 2.5rem);
+      background: color-mix(in srgb, var(--paper) 90%, transparent);
+      border-bottom: 1px solid var(--line); backdrop-filter: blur(14px);
+    }
+    .brand { display: flex; align-items: center; gap: .7rem; min-width: max-content; }
+    .brand-mark {
+      display: grid; place-items: center; width: 34px; height: 34px;
+      border-radius: 10px; color: #fff; background: var(--green);
+      font: 700 1rem var(--mono); box-shadow: 4px 4px 0 var(--gold);
+    }
+    .brand-text { font-weight: 700; letter-spacing: -.02em; }
+    .search-wrap { position: relative; flex: 1; min-width: 0; max-width: 680px; margin-inline: auto; }
+    .search-wrap span { position: absolute; left: .9rem; top: .6rem; color: var(--muted); }
+    #concept-search {
+      width: 100%; border: 1px solid var(--line); border-radius: 999px;
+      padding: .65rem 1rem .65rem 2.5rem; background: var(--card); color: var(--ink);
+    }
+    .icon-button {
+      display: inline-grid; place-items: center; min-width: 40px; min-height: 40px;
+      border: 1px solid var(--line); border-radius: 12px; background: var(--card); cursor: pointer;
+    }
+
+    .page-grid {
+      display: grid; grid-template-columns: 255px minmax(0, 1fr); gap: 2rem;
+      width: min(1500px, 100%); margin: 0 auto; padding: 1.25rem clamp(1rem, 3vw, 2.5rem) 5rem;
+    }
+    .side-nav {
+      position: sticky; top: 82px; align-self: start; max-height: calc(100vh - 100px); overflow: auto;
+      padding: 1rem; background: color-mix(in srgb, var(--card) 86%, transparent);
+      border: 1px solid var(--line); border-radius: var(--radius);
+    }
+    .side-nav .eyebrow { margin: 0 0 .7rem; }
+    .side-nav a {
+      display: flex; align-items: center; gap: .7rem; padding: .48rem .6rem;
+      border-left: 3px solid transparent; border-radius: 0 8px 8px 0;
+      text-decoration: none; color: var(--muted); font-size: .9rem;
+    }
+    .side-nav a:hover, .side-nav a.active { color: var(--ink); background: var(--paper-2); border-color: var(--terracotta); }
+    .nav-num { font: 500 .72rem var(--mono); color: var(--terracotta); }
+
+    main { min-width: 0; }
+    .hero {
+      position: relative; overflow: hidden; min-height: 500px;
+      padding: clamp(2rem, 6vw, 5rem); border: 1px solid var(--line);
+      border-radius: 28px; background: var(--card); box-shadow: var(--shadow);
+    }
+    .hero:after {
+      content: ""; position: absolute; width: 360px; height: 360px; right: -110px; top: -100px;
+      border: 60px solid color-mix(in srgb, var(--green) 16%, transparent); border-radius: 50%;
+    }
+    .hero-grid { display: grid; grid-template-columns: 1.35fr .65fr; gap: 2rem; align-items: center; position: relative; z-index: 1; }
+    .kicker, .eyebrow {
+      color: var(--terracotta); font: 500 .76rem var(--mono); text-transform: uppercase;
+      letter-spacing: .11em;
+    }
+    h1, h2, h3 { font-family: var(--serif); line-height: 1.12; letter-spacing: -.035em; }
+    h1 { max-width: 900px; margin: .7rem 0 1rem; font-size: clamp(2.5rem, 6vw, 5.8rem); }
+    h2 { margin: 0; font-size: clamp(2rem, 4vw, 3.5rem); }
+    h3 { margin: 0 0 .55rem; font-size: clamp(1.25rem, 2vw, 1.65rem); }
+    p { margin: .3rem 0 1rem; }
+    .lede { max-width: 780px; color: var(--muted); font-size: clamp(1rem, 2vw, 1.25rem); }
+    .hero-badges { display: flex; flex-wrap: wrap; gap: .55rem; margin-top: 1.5rem; }
+    .badge {
+      display: inline-flex; align-items: center; gap: .4rem; padding: .35rem .72rem;
+      border: 1px solid var(--line); border-radius: 999px; background: var(--paper); font-size: .82rem;
+    }
+    .translation-stack { display: grid; gap: .7rem; transform: rotate(1.5deg); }
+    .translation-card {
+      padding: 1rem 1.1rem; border: 1px solid var(--line); border-radius: 13px; background: var(--paper);
+      box-shadow: 5px 6px 0 color-mix(in srgb, var(--green) 18%, transparent);
+    }
+    .translation-card strong { display: block; font-family: var(--serif); }
+    .translation-card small { color: var(--muted); }
+    .translation-arrow { text-align: center; color: var(--terracotta); font-size: 1.3rem; }
+
+    .section { scroll-margin-top: 82px; padding: clamp(3.5rem, 7vw, 6.5rem) 0 0; }
+    .section-head { display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    .section-num { color: var(--terracotta); font: 500 1rem var(--mono); padding-top: .45rem; }
+    .section-intro { max-width: 850px; color: var(--muted); font-size: 1.08rem; }
+    .source-note {
+      display: inline-flex; margin-top: .55rem; padding: .3rem .65rem;
+      border: 1px dashed var(--line); border-radius: 7px; color: var(--muted); font: .76rem var(--mono);
+    }
+
+    .grid-2, .grid-3, .grid-4 { display: grid; gap: 1rem; }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .card {
+      position: relative; padding: 1.25rem; background: var(--card); border: 1px solid var(--line);
+      border-radius: var(--radius); box-shadow: 0 6px 18px rgba(38, 43, 35, .05);
+    }
+    .card p:last-child { margin-bottom: 0; }
+    .card-label { color: var(--terracotta); font: 500 .72rem var(--mono); text-transform: uppercase; letter-spacing: .09em; }
+    .accent-green { border-top: 5px solid var(--green); }
+    .accent-gold { border-top: 5px solid var(--gold); }
+    .accent-red { border-top: 5px solid var(--terracotta); }
+    .accent-blue { border-top: 5px solid var(--blue); }
+
+    .exam-answer {
+      margin: 1.25rem 0; padding: 1.3rem 1.5rem 1.3rem 4.2rem; position: relative;
+      background: color-mix(in srgb, var(--gold) 12%, var(--card)); border: 1px solid var(--gold); border-radius: var(--radius);
+    }
+    .exam-answer:before { content: "30s"; position: absolute; left: 1rem; top: 1.15rem; color: var(--terracotta); font: 700 .9rem var(--mono); }
+    .exam-answer strong { font-family: var(--serif); }
+
+    .tabs { margin: 1.2rem 0; }
+    .tab-list { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: .7rem; }
+    .tab-button {
+      border: 1px solid var(--line); border-radius: 999px; padding: .55rem .9rem;
+      background: var(--card); cursor: pointer; font-weight: 600;
+    }
+    .tab-button[aria-selected="true"] { color: #fff; background: var(--green); border-color: var(--green); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .diagram-shell {
+      position: relative; overflow: hidden; margin: 1.15rem 0; min-height: 240px;
+      padding: 3.3rem 1rem 1rem; border: 1px solid var(--line); border-radius: var(--radius);
+      background: var(--card); box-shadow: var(--shadow);
+    }
+    .diagram-shell.expanded { position: fixed; inset: 18px; z-index: 200; margin: 0; }
+    .diagram-tools { position: absolute; top: .7rem; right: .7rem; display: flex; gap: .35rem; z-index: 2; }
+    .diagram-tools button {
+      min-width: 33px; height: 33px; border: 1px solid var(--line); border-radius: 8px;
+      background: var(--paper); cursor: pointer; font: 500 .82rem var(--mono);
+    }
+    .diagram-stage { overflow: auto; width: 100%; min-height: 180px; }
+    .diagram-stage svg { max-width: none !important; transform-origin: top left; transition: transform .15s ease; }
+    .diagram-caption { margin: .7rem 0 0; color: var(--muted); text-align: center; font-size: .84rem; }
+
+    .flow-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: .6rem; align-items: stretch; margin: 1rem 0; }
+    .flow-node { position: relative; min-height: 120px; padding: 1rem; border: 1px solid var(--line); border-radius: 14px; background: var(--card); }
+    .flow-node:not(:last-child):after { content: "→"; position: absolute; top: 42%; right: -.55rem; z-index: 2; color: var(--terracotta); font-size: 1.3rem; }
+    .flow-node b { display: block; color: var(--green); font-family: var(--serif); }
+    .flow-node small { color: var(--muted); }
+
+    .code-card { margin: 1rem 0; border: 1px solid #32463e; border-radius: 15px; overflow: hidden; background: var(--code); color: var(--code-ink); }
+    .code-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .65rem 1rem; border-bottom: 1px solid #32463e; color: #a9bdb3; font: .78rem var(--mono); }
+    .code-head button { border: 1px solid #4d675c; border-radius: 7px; background: transparent; color: #cfe2d7; cursor: pointer; padding: .28rem .55rem; }
+    pre { margin: 0; padding: 1rem; overflow: auto; font-size: .83rem; line-height: 1.62; tab-size: 2; }
+    .kw { color: #f3a37f; } .type { color: #8dd5bd; } .str { color: #f2cd74; } .cm { color: #83968d; } .fn { color: #85c7df; }
+    .line-ref { color: #9fb0a8; font-size: .75rem; }
+
+    .table-wrap { margin: 1rem 0; overflow: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); }
+    table { width: 100%; border-collapse: collapse; min-width: 780px; }
+    th { position: sticky; top: 0; z-index: 1; background: var(--green); color: #fff; text-align: left; font: 600 .78rem var(--sans); letter-spacing: .03em; }
+    th, td { padding: .85rem 1rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+    tr:last-child td { border-bottom: 0; }
+    tbody tr:hover { background: color-mix(in srgb, var(--gold) 8%, transparent); }
+    td code { padding: .12rem .3rem; border-radius: 5px; background: var(--paper-2); color: var(--green); }
+
+    .compare { display: grid; grid-template-columns: 1fr 68px 1fr; align-items: stretch; margin: 1rem 0; }
+    .compare-side { padding: 1.25rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); }
+    .compare-bridge { display: grid; place-items: center; color: var(--terracotta); font-size: 1.8rem; }
+    .mini-list { margin: .6rem 0 0; padding-left: 1.2rem; }
+    .mini-list li { margin: .35rem 0; }
+
+    .state-layers { display: grid; grid-template-columns: repeat(4, 1fr); gap: .75rem; margin: 1rem 0; }
+    .state-layer { padding: 1rem; border-radius: 14px; color: #fff; min-height: 175px; }
+    .state-layer:nth-child(1) { background: #8f4938; }
+    .state-layer:nth-child(2) { background: #3f7182; }
+    .state-layer:nth-child(3) { background: #3d6c57; }
+    .state-layer:nth-child(4) { background: #665785; }
+    .state-layer span { display: inline-block; margin-bottom: .5rem; font: 500 .7rem var(--mono); opacity: .78; }
+    .state-layer b { display: block; font-family: var(--serif); font-size: 1.2rem; }
+    .state-layer small { opacity: .9; }
+
+    .constraint-demo { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+    .constraint-box { min-height: 155px; padding: 1rem; border: 2px solid var(--green); background: var(--card); border-radius: 15px; }
+    .constraint-box:nth-child(2) { border-style: dashed; border-color: var(--gold); }
+    .constraint-box:nth-child(3) { border-color: var(--terracotta); }
+    .axis { display: flex; justify-content: space-between; margin-top: .8rem; color: var(--muted); font: .74rem var(--mono); }
+
+    .decision-panel { padding: 1.25rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); }
+    .decision-buttons { display: flex; flex-wrap: wrap; gap: .55rem; margin: .7rem 0 1rem; }
+    .decision-buttons button { padding: .55rem .75rem; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); cursor: pointer; }
+    .decision-buttons button.active { color: #fff; border-color: var(--terracotta); background: var(--terracotta); }
+    #state-answer { min-height: 90px; padding: 1rem; border-left: 4px solid var(--green); background: var(--paper-2); border-radius: 0 10px 10px 0; }
+
+    details { margin: .7rem 0; padding: .85rem 1rem; border: 1px solid var(--line); border-radius: 12px; background: var(--card); }
+    summary { cursor: pointer; font-weight: 700; }
+    details[open] summary { color: var(--green); margin-bottom: .6rem; }
+    .warning { border-left: 5px solid var(--terracotta); }
+    .good { border-left: 5px solid var(--green); }
+
+    .quiz { padding: 1.2rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); }
+    .quiz-answer { display: none; margin-top: .8rem; padding: .8rem; background: var(--paper-2); border-radius: 10px; }
+    .quiz-answer.show { display: block; }
+    .reveal-answer { border: 0; border-radius: 9px; padding: .55rem .8rem; color: #fff; background: var(--green); cursor: pointer; }
+
+    .checklist { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; }
+    .check-item { display: flex; gap: .7rem; padding: .75rem; border: 1px solid var(--line); border-radius: 12px; background: var(--card); }
+    .check-item input { margin-top: .35rem; accent-color: var(--green); }
+    .check-item:has(input:checked) { opacity: .62; text-decoration: line-through; }
+
+    .concept-card.hidden { display: none !important; }
+    #no-results { display: none; margin: 1rem 0; padding: 1rem; border: 1px solid var(--terracotta); border-radius: 12px; background: var(--card); }
+    .footer { margin-top: 6rem; padding: 2rem 0; border-top: 1px solid var(--line); color: var(--muted); }
+    .mobile-toc { display: none; }
+
+    @media (max-width: 1100px) {
+      .page-grid { grid-template-columns: 1fr; }
+      .side-nav { display: none; }
+      .mobile-toc { display: block; margin: 1rem 0; }
+      .mobile-toc select { width: 100%; padding: .8rem; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 12px; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .translation-stack { max-width: 520px; transform: none; }
+    }
+    @media (max-width: 780px) {
+      .brand-text { display: none; }
+      .topbar { gap: .5rem; }
+      .grid-2, .grid-3, .grid-4, .state-layers, .constraint-demo { grid-template-columns: 1fr; }
+      .flow-strip { grid-template-columns: 1fr; }
+      .flow-node:not(:last-child):after { content: "↓"; top: auto; bottom: -.9rem; right: 50%; }
+      .compare { grid-template-columns: 1fr; gap: .6rem; }
+      .compare-bridge { transform: rotate(90deg); }
+      .section-head { grid-template-columns: 1fr; }
+      .section-num { padding: 0; }
+      .checklist { grid-template-columns: 1fr; }
+      .hero { padding: 2rem 1.2rem; }
+    }
+    @media (max-width: 520px) {
+      .topbar .icon-button { display: none; }
+      .topbar { padding-inline: .75rem; }
+      .page-grid { padding-inline: .75rem; }
+      .hero, .translation-card, .card { min-width: 0; }
+      h1, h2, h3, p, li { overflow-wrap: anywhere; }
+    }
+    @media print {
+      .topbar, .side-nav, .mobile-toc, .diagram-tools, .reveal-answer { display: none !important; }
+      body { background: #fff; color: #111; }
+      .page-grid { display: block; padding: 0; }
+      .hero, .card, .diagram-shell, .table-wrap, details { box-shadow: none; break-inside: avoid; }
+      .section { padding-top: 2rem; }
+      .tab-panel { display: block !important; }
+      .quiz-answer { display: block; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#inhalt">Zum Inhalt</a>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">F</span><span class="brand-text">Flutter Lernkarte</span></div>
+    <label class="search-wrap"><span aria-hidden="true">⌕</span><input id="concept-search" type="search" placeholder="Konzept suchen: State, MVC, Widget, Locale …" aria-label="Cheat-Sheet durchsuchen"></label>
+    <button class="icon-button" id="theme-toggle" type="button" title="Farbschema wechseln" aria-label="Farbschema wechseln">◐</button>
+    <button class="icon-button" id="print-button" type="button" title="Drucken oder als PDF sichern" aria-label="Drucken">⎙</button>
+  </header>
+
+  <div class="page-grid">
+    <nav class="side-nav" aria-label="Kapitel">
+      <p class="eyebrow">Inhalt</p>
+      <a href="#mental"><span class="nav-num">01</span>Mentales Modell</a>
+      <a href="#framework"><span class="nav-num">02</span>Framework & IoC</a>
+      <a href="#widgets"><span class="nav-num">03</span>Widgets & Bäume</a>
+      <a href="#layout"><span class="nav-num">04</span>Layout & Constraints</a>
+      <a href="#state"><span class="nav-num">05</span>State</a>
+      <a href="#lifecycle"><span class="nav-num">06</span>Start & Lifecycle</a>
+      <a href="#events"><span class="nav-num">07</span>Events & Navigation</a>
+      <a href="#declarative"><span class="nav-num">08</span>Deklarative UI</a>
+      <a href="#mvc"><span class="nav-num">09</span>MVC & Architektur</a>
+      <a href="#localization"><span class="nav-num">10</span>Localization</a>
+      <a href="#patterns"><span class="nav-num">11</span>Patterns & Prinzipien</a>
+      <a href="#async"><span class="nav-num">12</span>Async & Plattform</a>
+      <a href="#translation"><span class="nav-num">13</span>Übersetzungstabelle</a>
+      <a href="#exam"><span class="nav-num">14</span>Prüfungshilfe</a>
+    </nav>
+
+    <main id="inhalt">
+      <div class="mobile-toc">
+        <select id="mobile-navigation" aria-label="Kapitel auswählen">
+          <option value="">Kapitel auswählen …</option>
+          <option value="mental">01 Mentales Modell</option><option value="framework">02 Framework & IoC</option>
+          <option value="widgets">03 Widgets & Bäume</option><option value="layout">04 Layout & Constraints</option>
+          <option value="state">05 State</option><option value="lifecycle">06 Start & Lifecycle</option>
+          <option value="events">07 Events & Navigation</option><option value="declarative">08 Deklarative UI</option>
+          <option value="mvc">09 MVC & Architektur</option><option value="localization">10 Localization</option>
+          <option value="patterns">11 Patterns & Prinzipien</option><option value="async">12 Async & Plattform</option>
+          <option value="translation">13 Übersetzungstabelle</option><option value="exam">14 Prüfungshilfe</option>
+        </select>
+      </div>
+
+      <section class="hero">
+        <div class="hero-grid">
+          <div>
+            <p class="kicker">Prüfungs-Cheat-Sheet · Web & mobile Anwendungsentwicklung</p>
+            <h1>Skriptwissen in Flutter denken.</h1>
+            <p class="lede">Ein ausführlicher Übersetzer für die Konzepte aus <strong>web.pdf</strong> und <strong>mobile.pdf</strong> – mit Modellen, echtem CampusMensa-Code, Prüfungsantworten und typischen Stolperfallen.</p>
+            <div class="hero-badges">
+              <span class="badge">14 Kapitel</span><span class="badge">MVC Push-Modell</span><span class="badge">State-Entscheidungshilfe</span><span class="badge">Java-ähnliche Getter/Setter</span><span class="badge">druckbar</span>
+            </div>
+          </div>
+          <div class="translation-stack" aria-label="Übersetzungsebenen">
+            <div class="translation-card"><strong>1 · Skript</strong><small>abstrakter Begriff und Zweck</small></div>
+            <div class="translation-arrow">↓ übersetzen</div>
+            <div class="translation-card"><strong>2 · Flutter</strong><small>Framework-Mechanismus und API</small></div>
+            <div class="translation-arrow">↓ belegen</div>
+            <div class="translation-card"><strong>3 · CampusMensa</strong><small>konkrete Klasse, Methode und Datenfluss</small></div>
+          </div>
+        </div>
+      </section>
+
+      <div id="no-results">Kein Kapitel passt zur Suche. Versuche zum Beispiel „State“, „MVC“, „Locale“ oder „Lifecycle“.</div>
+
+      <section class="section concept-card" id="mental" data-search="mental model system struktur verhalten zustand ui datenfluss campusmensa">
+        <div class="section-head"><div class="section-num">01</div><div><p class="eyebrow">Das große Bild</p><h2>Das mentale Modell von Flutter</h2><p class="section-intro">Eine Flutter-App ist ein System aus Zustand, Ereignissen und deklarativ beschriebenen Widgets. Ereignisse verändern Daten; Benachrichtigungen lösen einen neuen Build aus; Flutter gleicht die neue Beschreibung effizient mit der bestehenden Oberfläche ab.</p><span class="source-note">Skriptanker: web.pdf S. 24, 186 · mobile.pdf S. 104</span></div></div>
+
+        <div class="diagram-shell" data-zoom="1">
+          <div class="diagram-tools"><button type="button" data-action="out" title="Verkleinern">−</button><button type="button" data-action="reset" title="Zurücksetzen">1:1</button><button type="button" data-action="in" title="Vergrößern">+</button><button type="button" data-action="expand" title="Vollbild">⛶</button></div>
+          <div class="diagram-stage"><pre class="mermaid">
+flowchart LR
+  U[Benutzeraktion] --> V[View / Widget]
+  V --> C[Controller]
+  C --> M[Model + Repository]
+  M --> N[notifyListeners]
+  N --> B[ListenableBuilder]
+  B --> W[neue Widget-Beschreibung]
+  W --> R[Element- und Render-Baum aktualisieren]
+  R --> U
+  classDef user fill:#c68a18,color:#17231f,stroke:#8e651c
+  classDef view fill:#356c82,color:#fff,stroke:#214a5b
+  classDef logic fill:#164b3b,color:#fff,stroke:#0e3428
+  class U user
+  class V,B,W,R view
+  class C,M,N logic
+          </pre></div>
+          <p class="diagram-caption">CampusMensa als Rückkopplung: Aktion → Fachänderung → Benachrichtigung → neue Darstellung.</p>
+        </div>
+
+        <div class="grid-3">
+          <article class="card accent-red"><span class="card-label">Input</span><h3>Ereignis</h3><p>Tippen, Texteingabe, Kameraergebnis, Sprachauswahl oder Lebenszyklusereignis.</p></article>
+          <article class="card accent-green"><span class="card-label">Gedächtnis</span><h3>State</h3><p>Alle veränderlichen Informationen, die späteres Verhalten oder sichtbare UI beeinflussen.</p></article>
+          <article class="card accent-blue"><span class="card-label">Output</span><h3>Widget-Baum</h3><p>Eine momentane, unveränderliche Beschreibung dessen, was Flutter anzeigen soll.</p></article>
+        </div>
+        <div class="exam-answer"><strong>Prüfungsantwort:</strong> Flutter arbeitet deklarativ. Der aktuelle State wird durch <code>build()</code> in einen Widget-Baum übersetzt. Ändert sich State, markiert ein Mechanismus wie <code>setState()</code> oder <code>notifyListeners()</code> den betroffenen Bereich für einen erneuten Build; Flutter aktualisiert anschließend nur die nötigen Teile der gerenderten Oberfläche.</div>
+      </section>
+
+      <section class="section concept-card" id="framework" data-search="framework inversion of control ioc callback kontrollumkehr runapp materialapp">
+        <div class="section-head"><div class="section-num">02</div><div><p class="eyebrow">Wer ruft wen auf?</p><h2>Framework und Inversion of Control</h2><p class="section-intro">Das Web-Skript definiert ein Framework als halbfertige Anwendung mit domänenspezifischer Funktionalität und Kontrollumkehr. Flutter liefert den Lebenszyklus, die Rendering-Pipeline und den Ereignisloop; euer Code füllt definierte Erweiterungspunkte aus.</p><span class="source-note">Skriptanker: web.pdf S. 119 · mobile.pdf S. 73, 76</span></div></div>
+
+        <div class="compare">
+          <div class="compare-side"><span class="card-label">Bibliothek</span><h3>Dein Code ruft sie auf</h3><p>Du entscheidest Zeitpunkt und Reihenfolge eines Funktionsaufrufs.</p><code>formatter.formatPrice(price)</code></div>
+          <div class="compare-bridge">↔</div>
+          <div class="compare-side"><span class="card-label">Framework</span><h3>Es ruft deinen Code auf</h3><p>Flutter entscheidet, wann Lifecycle- und Callback-Methoden ausgeführt werden.</p><code>initState()</code>, <code>build()</code>, <code>dispose()</code></div>
+        </div>
+
+        <div class="flow-strip">
+          <div class="flow-node"><b>main()</b><small>Euer Einstiegspunkt</small></div>
+          <div class="flow-node"><b>runApp()</b><small>Root-Widget registrieren</small></div>
+          <div class="flow-node"><b>Flutter</b><small>Eventloop & Rendering</small></div>
+          <div class="flow-node"><b>build()</b><small>Framework-Callback</small></div>
+          <div class="flow-node"><b>Frame</b><small>Layout, Paint, Ausgabe</small></div>
+        </div>
+
+        <div class="code-card"><div class="code-head"><span>lib/main.dart · Zeilen 12–16</span><button type="button" class="copy-code">kopieren</button></div><pre><code><span class="kw">void</span> <span class="fn">main</span>() {
+  <span class="type">WidgetsFlutterBinding</span>.ensureInitialized();
+  runApp(<span class="kw">const</span> <span class="type">MyApp</span>());
+}</code></pre></div>
+        <details class="good"><summary>Warum ist <code>build()</code> Inversion of Control?</summary><p>Nicht euer Code zeichnet eigenständig den Bildschirm. Flutter ruft <code>build()</code> dann auf, wenn es eine Beschreibung benötigt. Dasselbe gilt für <code>initState()</code>, Button-Callbacks und <code>dispose()</code>: Das Framework kontrolliert den Ablauf, eure Klassen liefern Verhalten.</p></details>
+      </section>
+
+      <section class="section concept-card" id="widgets" data-search="widget tree element renderobject stateless stateful buildcontext immutability baum view viewgroup">
+        <div class="section-head"><div class="section-num">03</div><div><p class="eyebrow">Bausteine der Oberfläche</p><h2>Widgets und die drei Bäume</h2><p class="section-intro">Das Mobile-Skript unterscheidet Android-<em>View</em> und <em>ViewGroup</em>. In Flutter ist nahezu alles ein Widget: sichtbare Elemente, Layout, Abstände, Navigation und Themen. Für eine saubere Erklärung muss man Widget, Element und RenderObject trennen.</p><span class="source-note">Skriptanker: mobile.pdf S. 48, 51–54</span></div></div>
+
+        <div class="grid-3">
+          <article class="card accent-gold"><span class="card-label">Beschreibung</span><h3>Widget Tree</h3><p>Unveränderliche Konfiguration. Wird bei einem Rebuild günstig neu erzeugt. Beispiel: <code>Text</code>, <code>Row</code>, <code>Scaffold</code>.</p></article>
+          <article class="card accent-green"><span class="card-label">Identität</span><h3>Element Tree</h3><p>Persistente Instanzen, die Widgets Positionen zuordnen, <code>BuildContext</code> bereitstellen und Updates vermitteln.</p></article>
+          <article class="card accent-blue"><span class="card-label">Geometrie</span><h3>Render Tree</h3><p>Berechnet Größe und Position, malt Pixel und verarbeitet Hit-Tests. Nicht jedes Widget erzeugt ein RenderObject.</p></article>
+        </div>
+
+        <div class="diagram-shell" data-zoom="1">
+          <div class="diagram-tools"><button type="button" data-action="out">−</button><button type="button" data-action="reset">1:1</button><button type="button" data-action="in">+</button><button type="button" data-action="expand">⛶</button></div>
+          <div class="diagram-stage"><pre class="mermaid">
+flowchart TB
+  subgraph W[Widget Tree · flüchtige Konfiguration]
+    WS[Scaffold] --> WC[Column]
+    WC --> WT[Text]
+    WC --> WB[FilledButton]
+  end
+  subgraph E[Element Tree · Identität und Kontext]
+    ES[ScaffoldElement] --> EC[ColumnElement]
+    EC --> ET[TextElement]
+    EC --> EB[ButtonElement]
+  end
+  subgraph R[Render Tree · Layout und Paint]
+    RS[RenderBox] --> RC[RenderFlex]
+    RC --> RT[RenderParagraph]
+    RC --> RB[RenderSemanticsGestureHandler]
+  end
+  W -->|inflate / update| E
+  E -->|verwaltet| R
+          </pre></div>
+          <p class="diagram-caption">Ein neuer Widget-Baum bedeutet nicht automatisch, dass alle Renderobjekte neu entstehen.</p>
+        </div>
+
+        <div class="table-wrap"><table><thead><tr><th>Begriff</th><th>Frage</th><th>Lebensdauer</th><th>CampusMensa-Beispiel</th></tr></thead><tbody>
+          <tr><td><strong>StatelessWidget</strong></td><td>Reicht Eingabe vollständig für die Darstellung?</td><td>Konfiguration wird neu erzeugt</td><td><code>CampusAppBar</code>, <code>LanguageMenu</code></td></tr>
+          <tr><td><strong>StatefulWidget</strong></td><td>Braucht das UI lokalen veränderlichen Zustand?</td><td>Widget kurzlebig, <code>State</code> bleibt am Element</td><td><code>NavigationShell</code>, Dialoge, <code>PhotoPage</code></td></tr>
+          <tr><td><strong>BuildContext</strong></td><td>Wo im Element-Baum befinde ich mich?</td><td>An Element gebunden</td><td><code>context.strings</code>, <code>Theme.of(context)</code></td></tr>
+          <tr><td><strong>Key</strong></td><td>Wie bleibt Identität bei Umordnung erhalten?</td><td>Teil des Widget-Abgleichs</td><td>Bei dynamisch umsortierten Review-Karten sinnvoll</td></tr>
+        </tbody></table></div>
+
+        <details class="warning"><summary>Stolperfalle: Widget und sichtbares Objekt gleichsetzen</summary><p>Ein Widget ist keine langlebige Bildschirmkomponente, sondern eine unveränderliche Beschreibung. Dauerhafte Zustände liegen im zugehörigen <code>State</code>-Objekt, in Controllern oder im Model – nicht im Widget selbst.</p></details>
+      </section>
+
+      <section class="section concept-card" id="layout" data-search="layout constraints row column expanded listview padding margin dp sp responsive viewgroup linear table">
+        <div class="section-head"><div class="section-num">04</div><div><p class="eyebrow">Von XML zu Komposition</p><h2>Layout: Constraints gehen runter, Größen hoch</h2><p class="section-intro">Android XML beschreibt Attribute wie Breite, Höhe, Gewicht, Margin und Padding. Flutter komponiert Layout-Widgets direkt in Dart. Das zentrale Flutter-Gesetz lautet: Eltern geben Constraints nach unten, Kinder melden Größen nach oben, Eltern bestimmen Positionen.</p><span class="source-note">Skriptanker: mobile.pdf S. 52, 55–63</span></div></div>
+
+        <div class="constraint-demo">
+          <div class="constraint-box"><span class="card-label">1 · Down</span><h3>Constraints</h3><p>Eltern sagen: „Du darfst zwischen min und max groß sein.“</p><div class="axis"><span>min</span><span>→</span><span>max</span></div></div>
+          <div class="constraint-box"><span class="card-label">2 · Up</span><h3>Size</h3><p>Das Kind wählt innerhalb der Grenzen seine konkrete Größe.</p><div class="axis"><span>child</span><span>↑</span><span>parent</span></div></div>
+          <div class="constraint-box"><span class="card-label">3 · Place</span><h3>Position</h3><p>Die Eltern platzieren das Kind in ihrem verfügbaren Raum.</p><div class="axis"><span>x</span><span>·</span><span>y</span></div></div>
+        </div>
+
+        <div class="tabs" data-tabs>
+          <div class="tab-list" role="tablist"><button class="tab-button" role="tab" aria-selected="true">Skriptbegriff</button><button class="tab-button" role="tab" aria-selected="false">Flutter</button><button class="tab-button" role="tab" aria-selected="false">CampusMensa</button></div>
+          <div class="tab-panel active" role="tabpanel"><div class="card"><h3>ViewGroup und XML-Attribute</h3><p><code>LinearLayout</code>, <code>TableLayout</code>, <code>layout_width</code>, <code>wrap_content</code>, <code>weight</code>, Margin und Padding strukturieren die Android-View-Hierarchie.</p></div></div>
+          <div class="tab-panel" role="tabpanel"><div class="card"><h3>Kompositions-Widgets</h3><p><code>Row</code>/<code>Column</code> entsprechen linearer Anordnung; <code>Expanded</code>/<code>Flexible</code> verteilen Platz; <code>Padding</code> erzeugt Innenabstand; <code>ListView</code> scrollt; <code>LayoutBuilder</code> reagiert auf verfügbare Constraints.</p></div></div>
+          <div class="tab-panel" role="tabpanel"><div class="card"><h3>Konkrete Stelle</h3><p>Die Review-Karte nutzt <code>Row</code>, <code>Expanded</code>, <code>Column</code> und <code>Padding</code>. Das Foto wird mit <code>ConstrainedBox(maxWidth: 360, maxHeight: 180)</code> begrenzt und mit <code>BoxFit.contain</code> eingepasst.</p></div></div>
+        </div>
+
+        <div class="table-wrap"><table><thead><tr><th>Android/Skript</th><th>Flutter-Übersetzung</th><th>Merksatz</th></tr></thead><tbody>
+          <tr><td><code>LinearLayout vertical</code></td><td><code>Column</code></td><td>Kinder untereinander</td></tr>
+          <tr><td><code>LinearLayout horizontal</code></td><td><code>Row</code></td><td>Kinder nebeneinander</td></tr>
+          <tr><td><code>layout_weight</code></td><td><code>Expanded(flex: ...)</code></td><td>Restplatz anteilig verteilen</td></tr>
+          <tr><td><code>wrap_content</code></td><td>Lose Constraints; Kind wählt intrinsische Größe</td><td>Kein einzelnes gleichnamiges Attribut</td></tr>
+          <tr><td><code>match_parent</code></td><td><code>SizedBox.expand</code> oder enge Parent-Constraints</td><td>Kontextabhängig</td></tr>
+          <tr><td>Margin</td><td>Äußeres <code>Padding</code> um ein Widget</td><td>Flutter hat kein allgemeines margin-Property</td></tr>
+          <tr><td><code>dp</code> / <code>sp</code></td><td>Logische Pixel; Text wird zusätzlich skaliert</td><td>Nicht mit physischen Pixeln verwechseln</td></tr>
+        </tbody></table></div>
+      </section>
+
+      <section class="section concept-card" id="state" data-search="state setstate changenotifier notifylisteners listenablebuilder ephemeral app domain persistent immutable setter rating object mutation">
+        <div class="section-head"><div class="section-num">05</div><div><p class="eyebrow">Zustand und Reaktion</p><h2>State: Was sich ändert und später relevant bleibt</h2><p class="section-intro">State ist Information, die sich während der Laufzeit ändern kann und Verhalten oder Darstellung beeinflusst. Flutter trennt die unveränderliche Widget-Konfiguration von veränderlichem Zustand. CampusMensa nutzt lokalen UI-State und geteilten Controller-/Model-State.</p><span class="source-note">Skriptanker: mobile.pdf S. 77, 90–93, 104 · web.pdf S. 157, 182–184</span></div></div>
+
+        <div class="state-layers">
+          <div class="state-layer"><span>Ebene 1</span><b>Ephemeral UI State</b><small>Nur für ein Widget relevant: ausgewählter Tab, Dialog-Sterne, temporäres Kamerabild.</small></div>
+          <div class="state-layer"><span>Ebene 2</span><b>Screen State</b><small>Für eine Seite relevant: Filter, ausgewählte Woche, Lade-/Fehlerstatus.</small></div>
+          <div class="state-layer"><span>Ebene 3</span><b>Domain State</b><small>Fachliche Objekte: Gerichte, Pläne, Reviews im Repository.</small></div>
+          <div class="state-layer"><span>Ebene 4</span><b>Persistent State</b><small>Über App-Neustarts hinweg: Datenbank, Datei, Secure Storage. Aktuell nicht implementiert.</small></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card accent-blue"><h3><code>setState()</code></h3><p>Für State, den genau dieses <code>State</code>-Objekt besitzt. Die Callback-Funktion ändert Werte synchron; Flutter markiert das Element als „dirty“ und plant einen Rebuild.</p><p><strong>App:</strong> <code>_selectedIndex</code>, <code>_locale</code>, Dialogeingaben, Kamerabild.</p></div>
+          <div class="card accent-green"><h3><code>ChangeNotifier</code></h3><p>Für State/Operationen, die außerhalb einer einzelnen View liegen oder von mehreren UI-Bereichen beobachtet werden. <code>notifyListeners()</code> sendet ein Änderungssignal.</p><p><strong>App:</strong> <code>MealController</code>, <code>WeekPlanController</code>, <code>ReviewController</code>, <code>AuthController</code>.</p></div>
+        </div>
+
+        <div class="diagram-shell" data-zoom="1"><div class="diagram-tools"><button type="button" data-action="out">−</button><button type="button" data-action="reset">1:1</button><button type="button" data-action="in">+</button><button type="button" data-action="expand">⛶</button></div><div class="diagram-stage"><pre class="mermaid">
+sequenceDiagram
+  actor U as Benutzer
+  participant V as ReviewsPage
+  participant C as ReviewController
+  participant M as MealReview
+  participant L as ListenableBuilder
+  U->>V: Speichern
+  V->>C: updateReview(review, neue Werte)
+  C->>M: setRating(rating)
+  C->>M: setMealComment(comment)
+  opt neues Foto vorhanden
+    C->>M: setMealImage(bytes)
+  end
+  C-->>L: notifyListeners()
+  L-->>V: builder erneut ausführen
+  V->>M: getRating(), getMealComment()
+          </pre></div><p class="diagram-caption">Das bestehende <code>MealReview</code>-Objekt wird mutiert; seine Identität bleibt erhalten.</p></div>
+
+        <div class="code-card"><div class="code-head"><span>lib/controllers/review_controller.dart · Zeilen 21–34</span><button type="button" class="copy-code">kopieren</button></div><pre><code><span class="kw">void</span> <span class="fn">updateReview</span>(
+  <span class="type">MealReview</span> review, {
+  required <span class="type">int</span> rating,
+  required <span class="type">String</span> mealComment,
+  <span class="type">Uint8List</span>? mealImageBytes,
+}) {
+  review.setRating(rating);
+  review.setMealComment(mealComment);
+  <span class="kw">if</span> (mealImageBytes != <span class="kw">null</span>) {
+    review.setMealImage(mealImageBytes);
+  }
+  notifyListeners();
+}</code></pre></div>
+
+        <div class="decision-panel">
+          <span class="card-label">Interaktive Entscheidungshilfe</span><h3>Wo gehört mein State hin?</h3>
+          <div class="decision-buttons"><button type="button" data-state-choice="local">Nur ein Widget</button><button type="button" data-state-choice="shared">Mehrere Views</button><button type="button" data-state-choice="restart">Nach Neustart</button><button type="button" data-state-choice="derived">Nur berechnet</button></div>
+          <div id="state-answer">Wähle eine Situation aus. Die passende State-Strategie erscheint hier.</div>
+        </div>
+
+        <details class="warning"><summary>Wichtig: App-State ist nicht das GoF-State-Pattern</summary><p><strong>App-State</strong> sind aktuelle Daten wie Sternezahl oder Woche. Das <strong>State-Entwurfsmuster</strong> kapselt zustandsabhängiges Verhalten in austauschbaren Zustandsobjekten. Beide heißen „State“, lösen aber verschiedene Probleme.</p></details>
+        <div class="exam-answer"><strong>Prüfungsantwort:</strong> State wird benötigt, weil eine interaktive Oberfläche sich über die Zeit verändert. In CampusMensa bleibt kleiner UI-State lokal in einem <code>StatefulWidget</code>; fachliche Daten liegen in Model/Repository und werden durch Controller geändert. Danach informiert <code>notifyListeners()</code> die <code>ListenableBuilder</code>-Views, die sich aus dem aktuellen Zustand neu aufbauen.</div>
+      </section>
+
+      <section class="section concept-card" id="lifecycle" data-search="startup start lifecycle main ensureinitialized runapp createstate initstate build dispose activity oncreate onresume hot reload">
+        <div class="section-head"><div class="section-num">06</div><div><p class="eyebrow">Vom Prozess zum ersten Frame</p><h2>App-Start und Lifecycle</h2><p class="section-intro">Das Mobile-Skript zeigt den Activity-Lebenszyklus. Flutter besitzt zusätzlich einen Widget-Lebenszyklus. Beim Start werden Binding, Root-Widget, State-Objekte, Controller und der erste Widget-Baum in einer klaren Reihenfolge erzeugt.</p><span class="source-note">Skriptanker: mobile.pdf S. 30–32, 76–78</span></div></div>
+
+        <div class="diagram-shell" data-zoom="1"><div class="diagram-tools"><button type="button" data-action="out">−</button><button type="button" data-action="reset">1:1</button><button type="button" data-action="in">+</button><button type="button" data-action="expand">⛶</button></div><div class="diagram-stage"><pre class="mermaid">
+flowchart TD
+  A[OS startet Flutter-Prozess] --> B[main]
+  B --> C[WidgetsFlutterBinding.ensureInitialized]
+  C --> D[runApp const MyApp]
+  D --> E[MyApp.createState]
+  E --> F[_MyAppState.initState]
+  F --> G[ein MealRepository erzeugen]
+  G --> H[vier Controller mit Abhängigkeiten erzeugen]
+  H --> I[build: MaterialApp]
+  I --> J[NavigationShell]
+  J --> K[WeekplanPage als erster IndexedStack-Eintrag]
+  K --> L[Layout · Paint · erster Frame]
+          </pre></div><p class="diagram-caption">Die Controller teilen genau dieselbe Repository-Instanz, weil <code>MyApp</code> sie zentral verdrahtet.</p></div>
+
+        <div class="table-wrap"><table><thead><tr><th>Android-Skript</th><th>Flutter-App-Ebene</th><th>Flutter-Widget-Ebene</th><th>Zweck</th></tr></thead><tbody>
+          <tr><td>Launcher Activity / Manifest</td><td><code>main()</code>, native Runner-Konfiguration</td><td><code>runApp()</code></td><td>Einstiegspunkt</td></tr>
+          <tr><td><code>onCreate()</code></td><td>Prozess wird gestartet</td><td><code>initState()</code></td><td>Einmalige Initialisierung eines State-Objekts</td></tr>
+          <tr><td><code>onResume()</code></td><td><code>AppLifecycleState.resumed</code></td><td><code>didChangeAppLifecycleState</code></td><td>App wieder interaktiv</td></tr>
+          <tr><td><code>onPause()</code></td><td><code>inactive</code>/<code>paused</code></td><td>Observer-Callback</td><td>Interaktion pausiert</td></tr>
+          <tr><td><code>onDestroy()</code></td><td>Prozessende nicht garantiert meldbar</td><td><code>dispose()</code></td><td>Widget-Ressourcen freigeben</td></tr>
+          <tr><td>Saved Instance State</td><td>Restoration/Persistenz</td><td><code>RestorationMixin</code> oder Storage</td><td>Zustand nach Rekonstruktion bewahren</td></tr>
+        </tbody></table></div>
+
+        <div class="code-card"><div class="code-head"><span>lib/main.dart · Zeilen 37–56</span><button type="button" class="copy-code">kopieren</button></div><pre><code><span class="kw">@override</span>
+<span class="kw">void</span> <span class="fn">initState</span>() {
+  <span class="kw">super</span>.initState();
+  <span class="kw">final</span> mealRepository = <span class="type">MealRepository</span>();
+  _mealController = <span class="type">MealController</span>(mealRepository);
+  _weekPlanController = <span class="type">WeekPlanController</span>(mealRepository);
+  _reviewController = <span class="type">ReviewController</span>(mealRepository);
+  _authController = <span class="type">AuthController</span>();
+}
+
+<span class="kw">@override</span>
+<span class="kw">void</span> <span class="fn">dispose</span>() {
+  _mealController.dispose();
+  _weekPlanController.dispose();
+  _reviewController.dispose();
+  _authController.dispose();
+  <span class="kw">super</span>.dispose();
+}</code></pre></div>
+        <details class="warning"><summary>Stolperfalle: <code>build()</code> ist kein einmaliger Initialisierer</summary><p><code>build()</code> kann sehr häufig laufen. Keine Controller, Netzwerkaufrufe oder dauerhaften Ressourcen dort unkontrolliert erzeugen. Einmalige, vom State besessene Objekte gehören typischerweise in <code>initState()</code> und werden in <code>dispose()</code> freigegeben.</p></details>
+      </section>
+
+      <section class="section concept-card" id="events" data-search="event callback listener gesture onpressed navigator future async await dialog result bundle intent photo camera">
+        <div class="section-head"><div class="section-num">07</div><div><p class="eyebrow">Feel: dynamisches Verhalten</p><h2>Events, Callbacks und Navigationsergebnisse</h2><p class="section-intro">Das Skript ordnet Event-Handling dem „Feel“ zu und zeigt Listener, Activity-Starts und Rückgabewerte. Flutter übergibt Funktionen als Callbacks. Navigation liefert ein <code>Future&lt;T?&gt;</code>, dessen Ergebnis mit <code>await</code> gelesen wird.</p><span class="source-note">Skriptanker: mobile.pdf S. 45, 73–80</span></div></div>
+
+        <div class="grid-3">
+          <article class="card"><span class="card-label">1 · Eventquelle</span><h3>Widget</h3><p><code>FilledButton</code>, <code>TextField</code>, <code>NavigationBar</code> oder Gestenerkennung erzeugen Ereignisse.</p></article>
+          <article class="card"><span class="card-label">2 · Callback</span><h3>Funktion</h3><p><code>onPressed</code>, <code>onChanged</code> oder <code>onDestinationSelected</code> erhalten eine blockbasierte Funktion.</p></article>
+          <article class="card"><span class="card-label">3 · Wirkung</span><h3>State/Navigation</h3><p>Callback ändert State, ruft einen Controller auf oder öffnet eine neue Route.</p></article>
+        </div>
+
+        <div class="diagram-shell" data-zoom="1"><div class="diagram-tools"><button type="button" data-action="out">−</button><button type="button" data-action="reset">1:1</button><button type="button" data-action="in">+</button><button type="button" data-action="expand">⛶</button></div><div class="diagram-stage"><pre class="mermaid">
+sequenceDiagram
+  actor U as Benutzer
+  participant D as ReviewEditorDialog
+  participant N as Navigator
+  participant P as PhotoPage
+  U->>D: Foto aufnehmen
+  D->>N: push PhotoPage
+  N->>P: Route anzeigen
+  U->>P: Foto bestätigen
+  P->>N: pop imageBytes
+  N-->>D: Future wird mit Uint8List erfüllt
+  D->>D: setState: _imageBytes setzen
+          </pre></div><p class="diagram-caption">Flutter-Pendant zu „Activity with Result“: Route pushen, typisiertes Ergebnis beim pop zurückgeben.</p></div>
+
+        <div class="code-card"><div class="code-head"><span>lib/views/reviews/reviews_page.dart · Zeilen 348–363</span><button type="button" class="copy-code">kopieren</button></div><pre><code><span class="kw">Future</span>&lt;<span class="kw">void</span>&gt; <span class="fn">_openCamera</span>() <span class="kw">async</span> {
+  <span class="kw">final</span> imageBytes = <span class="kw">await</span> <span class="type">Navigator</span>.push&lt;<span class="type">Uint8List</span>&gt;(
+    context,
+    <span class="type">MaterialPageRoute</span>(
+      builder: (context) {
+        <span class="kw">return const</span> <span class="type">PhotoPage</span>();
+      },
+    ),
+  );
+  <span class="kw">if</span> (imageBytes != <span class="kw">null</span> &amp;&amp; mounted) {
+    setState(() {
+      _imageBytes = imageBytes;
+    });
+  }
+}</code></pre></div>
+        <details><summary>Warum wird nach <code>await</code> <code>mounted</code> geprüft?</summary><p>Während die Kameraseite geöffnet ist, könnte das ursprüngliche Widget aus dem Baum entfernt werden. Dann darf sein <code>State</code> nicht mehr mit <code>setState()</code> aktualisiert werden. <code>mounted</code> schützt genau davor.</p></details>
+      </section>
+
+      <section class="section concept-card" id="declarative" data-search="declarative imperative ui what how rebuild compose settext findviewbyid flutter build">
+        <div class="section-head"><div class="section-num">08</div><div><p class="eyebrow">Was statt Wie</p><h2>Deklarative UI</h2><p class="section-intro">Die Vorlesung stellt imperative Updates einer zustandsbehafteten View-Hierarchie deklarativen Toolkits gegenüber. Flutter beschreibt in <code>build()</code>, wie die UI für den aktuellen State aussehen soll. Direkte manuelle Änderungen an vorhandenen UI-Knoten sind nicht das Modell.</p><span class="source-note">Skriptanker: mobile.pdf S. 51, 104–105</span></div></div>
+
+        <div class="compare">
+          <div class="compare-side"><span class="card-label">Imperativ · Wie?</span><h3>UI-Knoten suchen und verändern</h3><ol class="mini-list"><li>Button finden</li><li>Text explizit setzen</li><li>Bild explizit austauschen</li><li>Containerkinder manuell verwalten</li></ol><p><code>button.setText(...)</code></p></div>
+          <div class="compare-bridge">→</div>
+          <div class="compare-side"><span class="card-label">Deklarativ · Was?</span><h3>UI als Funktion des State</h3><ol class="mini-list"><li>State lesen</li><li>gewünschten Widget-Baum beschreiben</li><li>Änderung signalisieren</li><li>Framework gleicht Bäume ab</li></ol><p><code>Text(review.getMealComment())</code></p></div>
+        </div>
+
+        <div class="code-card"><div class="code-head"><span>lib/views/reviews/reviews_page.dart · Prinzip aus Zeilen 35–58, 89–94</span><button type="button" class="copy-code">kopieren</button></div><pre><code><span class="kw">return</span> <span class="type">ListenableBuilder</span>(
+  listenable: widget.controller,
+  builder: (context, child) {
+    <span class="kw">final</span> reviews = widget.controller.reviews;
+    <span class="kw">return</span> <span class="type">ListView</span>.builder(
+      itemCount: reviews.length,
+      itemBuilder: (context, index) {
+        <span class="kw">final</span> review = reviews[index];
+        <span class="kw">return</span> <span class="type">Text</span>(review.getMealComment());
+      },
+    );
+  },
+);</code></pre></div>
+        <div class="exam-answer"><strong>Prüfungsantwort:</strong> Deklarativ bedeutet: Aus dem momentanen State wird eine UI-Beschreibung erzeugt. Nach einer Zustandsänderung sagt die App nicht „ändere diesen Textknoten“, sondern lässt <code>build()</code> erneut laufen. Flutter ermittelt selbst die minimal nötigen Aktualisierungen.</div>
+      </section>
+
+      <section class="section concept-card" id="mvc" data-search="mvc model view controller active passive push pull observer repository separation responsibility campusmensa">
+        <div class="section-head"><div class="section-num">09</div><div><p class="eyebrow">Architektur</p><h2>MVC: Rollen trennen, Datenfluss erklären</h2><p class="section-intro">MVC überbrückt laut Skript die Lücke zwischen mentalem Modell des Menschen und digitalem Modell. Es trennt Fachlichkeit, Präsentation und die Verarbeitung von Aktionen. CampusMensa folgt einer MVC-nahen Schichtung mit zusätzlichem Repository.</p><span class="source-note">Skriptanker: web.pdf S. 178–191, 198 · mobile.pdf S. 82–93</span></div></div>
+
+        <div class="diagram-shell" data-zoom="1"><div class="diagram-tools"><button type="button" data-action="out">−</button><button type="button" data-action="reset">1:1</button><button type="button" data-action="in">+</button><button type="button" data-action="expand">⛶</button></div><div class="diagram-stage"><pre class="mermaid">
+flowchart LR
+  U[User] -->|Aktion| V[View\nviews + widgets]
+  V -->|Methodenaufruf| C[Controller\nChangeNotifier]
+  C -->|lesen / verändern| R[Repository\ngemeinsame Datenhaltung]
+  R -->|enthält| M[Model\nMeal · MealPlan · MealReview]
+  C -->|notifyListeners| V
+  V -->|Getter lesen| M
+  classDef view fill:#356c82,color:#fff,stroke:#214a5b
+  classDef controller fill:#b85136,color:#fff,stroke:#853a29
+  classDef model fill:#164b3b,color:#fff,stroke:#0e3428
+  class V view
+  class C controller
+  class R,M model
+          </pre></div><p class="diagram-caption">Repository ist kein vierter MVC-Buchstabe, sondern kapselt die Datenquelle innerhalb der Model-/Daten-Schicht.</p></div>
+
+        <div class="grid-3">
+          <article class="card accent-green"><span class="card-label">Model</span><h3>Struktur + Fachzustand</h3><p><code>Meal</code>, <code>MealPlan</code>, <code>MealReview</code>, <code>MealType</code> sowie <code>MealRepository</code>. Private Felder werden über Java-ähnliche Methoden gelesen und geändert.</p></article>
+          <article class="card accent-blue"><span class="card-label">View</span><h3>Darstellung</h3><p><code>WeekplanPage</code>, <code>EssenPage</code>, <code>ReviewsPage</code>, Dialoge und Widgets. Sie lesen Modeldaten und erzeugen die Präsentation.</p></article>
+          <article class="card accent-red"><span class="card-label">Controller</span><h3>Aktion + Koordination</h3><p><code>MealController</code>, <code>WeekPlanController</code>, <code>ReviewController</code>, <code>AuthController</code>. Sie nehmen UI-Absichten an und koordinieren Änderungen.</p></article>
+        </div>
+
+        <div class="tabs" data-tabs>
+          <div class="tab-list" role="tablist"><button class="tab-button" role="tab" aria-selected="true">Passives Model / Pull</button><button class="tab-button" role="tab" aria-selected="false">Aktives Model / Push</button><button class="tab-button" role="tab" aria-selected="false">CampusMensa</button></div>
+          <div class="tab-panel active"><div class="card"><h3>Pull beziehungsweise Poll</h3><p>Der Controller verändert und befragt das Model und ruft anschließend Views auf. Bei zyklischem Nachfragen wird Pull zu Poll. Nachteil: Der Controller trägt viel Aktualisierungsarbeit.</p></div></div>
+          <div class="tab-panel"><div class="card"><h3>Push</h3><p>Das aktive Model beziehungsweise eine beobachtbare Logik signalisiert Änderungen. Beobachter reagieren, ohne dass der Controller jede View direkt kennen und aufrufen muss.</p></div></div>
+          <div class="tab-panel"><div class="card"><h3>Push-artige Aktualisierung</h3><p>Controller erben von <code>ChangeNotifier</code>. Nach einer Mutation rufen sie <code>notifyListeners()</code> auf. <code>ListenableBuilder</code> ist registrierter Beobachter und baut die betroffene View neu. Die View zieht beim Build die aktuellen Werte über Getter.</p></div></div>
+        </div>
+
+        <div class="code-card"><div class="code-head"><span>lib/models/meal.dart · Java-ähnliche Kapselung</span><button type="button" class="copy-code">kopieren</button></div><pre><code><span class="kw">class</span> <span class="type">Meal</span> {
+  <span class="type">String</span> _name;
+  <span class="type">double</span> _price;
+  <span class="type">MealType</span> _type;
+
+  <span class="kw">void</span> <span class="fn">setName</span>(<span class="type">String</span> name) {
+    _name = name;
+  }
+
+  <span class="type">String</span> <span class="fn">getName</span>() {
+    <span class="kw">return</span> _name;
+  }
+}</code></pre></div>
+
+        <div class="table-wrap"><table><thead><tr><th>Aktion</th><th>View</th><th>Controller</th><th>Model/Repository</th><th>Reaktion</th></tr></thead><tbody>
+          <tr><td>Essen bearbeiten</td><td>Dialog liefert Eingaben</td><td><code>updateMeal</code></td><td><code>setName</code>, <code>setPrice</code>, <code>setType</code></td><td><code>notifyListeners</code> → Liste baut neu</td></tr>
+          <tr><td>Review bearbeiten</td><td>Dialog liefert <code>_ReviewFormData</code></td><td><code>updateReview</code></td><td>bestehendes <code>MealReview</code> mutieren</td><td>Identität bleibt; View liest Getter</td></tr>
+          <tr><td>Woche ändern</td><td>Auswahl meldet Nummer</td><td><code>selectWeek</code></td><td>Controller hält Auswahl; Repository liefert Plan</td><td>Wochenansicht baut neu</td></tr>
+          <tr><td>Gericht löschen</td><td>Bestätigung</td><td><code>deleteMeal</code></td><td>aus Liste entfernen; Planplätze auf <code>null</code></td><td>alle abhängigen Darstellungen konsistent</td></tr>
+        </tbody></table></div>
+
+        <details class="warning"><summary>Ehrliche Architektur-Einordnung</summary><p>Es ist eine MVC-nahe Flutter-Architektur, keine historisch „reine“ Smalltalk-MVC-Implementierung. <code>ChangeNotifier</code> bringt Observer-Charakter hinein, und Controller stellen teils bereits aufbereitete Daten bereit – damit nähert sich die praktische Struktur auch MVVM-Ideen an. Für die Prüfung ist wichtiger, Rollen und Datenfluss konkret zu begründen, statt nur ein Etikett zu nennen.</p></details>
+      </section>
+
+      <section class="section concept-card" id="localization" data-search="localization internationalization i18n locale resourcebundle properties strings key value intl numberformat currency language">
+        <div class="section-head"><div class="section-num">10</div><div><p class="eyebrow">Sprache ist mehr als Text</p><h2>Internationalisierung und Localization</h2><p class="section-intro">Internationalisierung bereitet Software technisch auf mehrere Regionen vor; Localization liefert die konkrete sprach- und regionsabhängige Ausprägung. Das Skript nennt Texte, Grafiken, Farben, Datum, Zeit, Zahlen, Währungen und Maße. CampusMensa realisiert Deutsch/Englisch, Stringtabellen sowie Preisformatierung.</p><span class="source-note">Skriptanker: web.pdf S. 227, 242–245 · mobile.pdf S. 52, 71</span></div></div>
+
+        <div class="diagram-shell" data-zoom="1"><div class="diagram-tools"><button type="button" data-action="out">−</button><button type="button" data-action="reset">1:1</button><button type="button" data-action="in">+</button><button type="button" data-action="expand">⛶</button></div><div class="diagram-stage"><pre class="mermaid">
+flowchart LR
+  S[Sprachauswahl DE / EN] --> L[Locale in _MyAppState]
+  L --> A[MaterialApp.locale]
+  A --> D[LocalizationsDelegate.load]
+  D --> O[AppLocalizations locale]
+  O --> K[Schlüssel: weekPlan]
+  K --> T[Wert: Essensplan / Meal plan]
+  O --> N[NumberFormat.currency]
+  N --> P[12,99 € / €12.99]
+          </pre></div><p class="diagram-caption">Locale steuert sowohl Ressourcenauswahl als auch kulturelle Formatierung.</p></div>
+
+        <div class="compare">
+          <div class="compare-side"><span class="card-label">Skript / Java-Web</span><h3>ResourceBundle</h3><p>Pro Sprache eine Property-Datei; Schlüssel bleibt stabil, Textwert wechselt. Eine <code>Locale</code> kombiniert Sprache und optional Land.</p><code>artikel.titel=Titel</code></div>
+          <div class="compare-bridge">→</div>
+          <div class="compare-side"><span class="card-label">CampusMensa / Flutter</span><h3>AppLocalizations</h3><p>Zwei konstante Maps, ein Delegate, unterstützte Locales und Zugriff über <code>context.strings</code>.</p><code>strings.text('weekPlan')</code></div>
+        </div>
+
+        <div class="code-card"><div class="code-head"><span>lib/core/localization/app_localizations.dart · Zeilen 122–130, 156–164</span><button type="button" class="copy-code">kopieren</button></div><pre><code><span class="type">String</span> <span class="fn">text</span>(<span class="type">String</span> key) {
+  <span class="kw">var</span> table = _german;
+  <span class="kw">if</span> (locale.languageCode == <span class="str">'en'</span>) {
+    table = _english;
+  }
+  <span class="kw">return</span> table[key] ?? key;
+}
+
+<span class="type">String</span> <span class="fn">formatPrice</span>(<span class="type">double</span> price) {
+  <span class="kw">return</span> <span class="type">NumberFormat</span>.currency(
+    locale: locale.languageCode,
+    symbol: <span class="str">'€'</span>,
+    decimalDigits: 2,
+  ).format(price);
+}</code></pre></div>
+
+        <div class="grid-2">
+          <article class="card accent-green"><h3>Was bereits gut gelöst ist</h3><ul class="mini-list"><li>Texte sind durch Schlüssel von Widgets getrennt.</li><li><code>supportedLocales</code> nennt DE und EN.</li><li>Material-, Widget- und Cupertino-Delegates sind registriert.</li><li>Zahlen/Währung werden mit <code>intl</code> formatiert.</li><li>Deutsches Komma und englischer Punkt werden beim Preis akzeptiert.</li></ul></article>
+          <article class="card accent-gold"><h3>Was bei Wachstum sinnvoll wäre</h3><ul class="mini-list"><li>Flutter-Standard mit ARB-Dateien und Codegenerierung.</li><li>Pluralregeln statt einfacher <code>'$count meals'</code>-Texte.</li><li>Regionen wie <code>de_DE</code> und <code>en_GB</code> explizit behandeln.</li><li>Alle Bilder, Hilfetexte und Barrierefreiheitslabels prüfen.</li><li>Fallback und fehlende Schlüssel automatisiert testen.</li></ul></article>
+        </div>
+        <div class="exam-answer"><strong>Prüfungsantwort:</strong> Die App hält die aktive <code>Locale</code> zentral in <code>MyApp</code>. <code>MaterialApp</code> verteilt sie über Flutters Localization-System. <code>AppLocalizations</code> wählt anhand des Sprachcodes die Key-Value-Tabelle; Views lesen Texte über <code>context.strings</code>. <code>intl</code> formatiert Preise kulturabhängig.</div>
+      </section>
+
+      <section class="section concept-card" id="patterns" data-search="pattern singleton observer command template method state strategy dependency injection srp factory repository">
+        <div class="section-head"><div class="section-num">11</div><div><p class="eyebrow">Entwurfsmuster im Alltag</p><h2>Patterns und Prinzipien auf Flutter übersetzt</h2><p class="section-intro">Das Web-Skript listet Erzeugungs-, Struktur- und Verhaltensmuster. Nicht jedes Muster sollte zwanghaft „gefunden“ werden. Entscheidend sind Problem, Lösungsidee und ein ehrliches Beispiel aus dem Projekt.</p><span class="source-note">Skriptanker: web.pdf S. 157–158, 191, 198</span></div></div>
+
+        <div class="table-wrap"><table><thead><tr><th>Muster/Prinzip</th><th>Problem</th><th>Flutter-Übersetzung</th><th>CampusMensa-Einordnung</th></tr></thead><tbody>
+          <tr><td><strong>Observer</strong></td><td>Abhängige Darstellungen über Änderungen informieren</td><td><code>ChangeNotifier</code> + <code>ListenableBuilder</code></td><td>Controller benachrichtigt Views; klar vorhanden</td></tr>
+          <tr><td><strong>Command</strong></td><td>Aktion als Objekt/Funktion kapseln</td><td>Callbacks wie <code>VoidCallback</code></td><td><code>onAdminPressed</code>, <code>onLocaleChanged</code>; funktionale, leichte Form</td></tr>
+          <tr><td><strong>Template Method</strong></td><td>Rahmenalgorithmus vorgeben, Schritte überschreiben</td><td>Framework-Lifecycle mit Overrides</td><td><code>initState</code>, <code>build</code>, <code>dispose</code>; analog, aber Framework-API</td></tr>
+          <tr><td><strong>Singleton</strong></td><td>Genau eine Instanz garantieren</td><td>Eine Instanz zentral erzeugen oder Singleton implementieren</td><td>Ein Repository wird geteilt, ist aber kein global erzwungener Singleton</td></tr>
+          <tr><td><strong>Dependency Injection</strong></td><td>Abhängigkeiten von außen liefern</td><td>Konstruktorparameter</td><td><code>MealController(mealRepository)</code>; eindeutig vorhanden</td></tr>
+          <tr><td><strong>State Pattern</strong></td><td>Verhalten wechselt mit Zustandsobjekt</td><td>Klassen pro Zustand</td><td>Nicht implementiert; nicht mit UI-State verwechseln</td></tr>
+          <tr><td><strong>Strategy</strong></td><td>Algorithmus austauschbar machen</td><td>Interface/Callback einspeisen</td><td>Könnte Preis-/Filterstrategie kapseln; aktuell einfache Bedingung</td></tr>
+          <tr><td><strong>Factory</strong></td><td>Erzeugung kontrollieren</td><td><code>factory</code>-Konstruktor</td><td><code>Meal</code>, <code>MealPlan</code>, <code>MealReview</code> nutzen Factory-Konstruktoren</td></tr>
+          <tr><td><strong>Single Responsibility</strong></td><td>Änderungsgründe begrenzen</td><td>View, Controller, Repository trennen</td><td>Grundstruktur vorhanden; große View-Dateien könnten weiter zerlegt werden</td></tr>
+        </tbody></table></div>
+
+        <div class="grid-2">
+          <article class="card accent-green"><h3>Geteilte Instanz ≠ Singleton</h3><p><code>MyApp</code> erzeugt einmal <code>MealRepository()</code> und injiziert dieselbe Referenz in drei Controller. Das garantiert innerhalb dieser Komposition eine gemeinsame Datenbasis. Die Klasse selbst verhindert aber keine zweite Instanz und ist daher formal kein Singleton.</p></article>
+          <article class="card accent-red"><h3>Setter allein aktualisieren keine UI</h3><p><code>review.setRating(2)</code> mutiert das Model. Sichtbar wird die Änderung erst, weil der Controller anschließend <code>notifyListeners()</code> ausführt und die View die Getter erneut liest.</p></article>
+        </div>
+      </section>
+
+      <section class="section concept-card" id="async" data-search="async future await ajax non blocking camera plugin repository room retrofit http json isolate persistence">
+        <div class="section-head"><div class="section-num">12</div><div><p class="eyebrow">Warten ohne Stillstand</p><h2>Asynchronität, Plattform und Datenquellen</h2><p class="section-intro">AJAX im Web-Skript beschreibt, dass ein Anforderer weiterarbeiten kann, ohne blockierend auf die Antwort zu warten. In Dart repräsentiert <code>Future&lt;T&gt;</code> einen späteren Wert; <code>async</code>/<code>await</code> macht den Kontrollfluss lesbar, ohne den UI-Thread synchron zu blockieren.</p><span class="source-note">Skriptanker: web.pdf S. 89–91 · mobile.pdf S. 8, 79–80, 88, 97, 100</span></div></div>
+
+        <div class="flow-strip">
+          <div class="flow-node"><b>Aufruf</b><small>Kamera oder Dialog öffnen</small></div>
+          <div class="flow-node"><b>Future</b><small>späteres Ergebnis</small></div>
+          <div class="flow-node"><b>Eventloop</b><small>UI bleibt reaktionsfähig</small></div>
+          <div class="flow-node"><b>Ergebnis</b><small>Bytes oder Formdaten</small></div>
+          <div class="flow-node"><b>State</b><small>prüfen und aktualisieren</small></div>
+        </div>
+
+        <div class="table-wrap"><table><thead><tr><th>Skripttechnologie</th><th>Aufgabe</th><th>Flutter/Dart-Pendant</th><th>Projektstatus</th></tr></thead><tbody>
+          <tr><td>AJAX / Fetch</td><td>Asynchrone HTTP-Kommunikation</td><td><code>Future</code>, <code>async</code>/<code>await</code>, HTTP-Client</td><td>Kein Webservice; nicht benötigt</td></tr>
+          <tr><td>Retrofit</td><td>Webservice-Connector</td><td><code>http</code>, Dio oder generierter Client</td><td>Nicht implementiert</td></tr>
+          <tr><td>Room / SQLite</td><td>Lokale Persistenz</td><td>Drift, sqflite, Isar o. Ä.</td><td>Repository hält Daten nur im Speicher</td></tr>
+          <tr><td>Intent + Bundle</td><td>Navigation und Datenaustausch</td><td><code>Navigator.push&lt;T&gt;</code>, Konstruktorparameter, <code>pop(result)</code></td><td>Foto-Bytes werden typisiert zurückgegeben</td></tr>
+          <tr><td>Android Permission</td><td>Geschützte Plattformfunktion</td><td>Plugin + native Manifest/Info.plist-Einträge</td><td><code>camera</code>-Plugin</td></tr>
+        </tbody></table></div>
+        <details class="warning"><summary>Stolperfalle: <code>await</code> bedeutet nicht „alles ist parallel“</summary><p><code>await</code> gibt dem Eventloop die Kontrolle zurück, solange auf ein asynchrones Ergebnis gewartet wird. CPU-intensive Berechnungen können den UI-Isolate trotzdem blockieren und müssten gegebenenfalls ausgelagert werden.</p></details>
+      </section>
+
+      <section class="section concept-card" id="translation" data-search="translation matrix glossary android web flutter concepts servlet html xml activity manifest strings bundle table">
+        <div class="section-head"><div class="section-num">13</div><div><p class="eyebrow">Direkte Übersetzung</p><h2>Skript → Flutter → CampusMensa</h2><p class="section-intro">Diese Matrix eignet sich zum Wiederholen: links der Vorlesungsbegriff, in der Mitte die Flutter-Idee, rechts der konkrete Beleg aus der App.</p><span class="source-note">Skriptanker: mobile.pdf S. 4 sowie die thematischen Seiten beider Skripte</span></div></div>
+
+        <div class="table-wrap"><table><thead><tr><th>Skriptbegriff</th><th>Flutter</th><th>CampusMensa-Beleg</th><th>Kernaussage</th></tr></thead><tbody>
+          <tr><td>Framework</td><td>Flutter SDK/Engine</td><td>Lifecycle-Overrides und Callbacks</td><td>Kontrollumkehr</td></tr>
+          <tr><td>Main Entry Point</td><td><code>main()</code> + <code>runApp()</code></td><td><code>lib/main.dart</code></td><td>Root-Widget startet Baum</td></tr>
+          <tr><td>Activity</td><td>keine 1:1-Klasse; Route/Screen plus App-Lifecycle</td><td><code>WeekplanPage</code>, <code>PhotoPage</code></td><td>Begriffe nicht blind gleichsetzen</td></tr>
+          <tr><td>View / Widget</td><td><code>Widget</code></td><td><code>Text</code>, <code>Card</code>, <code>NavigationBar</code></td><td>Unveränderliche UI-Beschreibung</td></tr>
+          <tr><td>ViewGroup / Layout</td><td><code>Row</code>, <code>Column</code>, <code>Stack</code></td><td>Review-Karten, <code>IndexedStack</code></td><td>Widgets komponieren Widgets</td></tr>
+          <tr><td>XML Layout</td><td>Dart-Widget-Baum</td><td><code>build()</code>-Methoden</td><td>Typisierte deklarative UI im Code</td></tr>
+          <tr><td>Listener</td><td>Callback</td><td><code>onPressed</code>, <code>onSelected</code></td><td>Event Delegation</td></tr>
+          <tr><td>Activity Result</td><td><code>Future&lt;T?&gt;</code> aus Navigator</td><td>Kamera liefert <code>Uint8List</code></td><td>Asynchrones typisiertes Ergebnis</td></tr>
+          <tr><td>Bundle/Parcelable</td><td>Konstruktorparameter / Route-Ergebnis</td><td><code>MaterialPageRoute</code></td><td>Objekte innerhalb Dart direkt übergeben</td></tr>
+          <tr><td>strings.xml</td><td>ARB oder eigener Localizations-Delegate</td><td><code>_german</code>/<code>_english</code></td><td>Key-Value-Ressourcen</td></tr>
+          <tr><td>Locale</td><td><code>Locale</code> + Delegates</td><td><code>_locale</code> in <code>MyApp</code></td><td>Sprache/Region steuert Ressourcen</td></tr>
+          <tr><td>NumberFormat</td><td><code>intl</code></td><td><code>formatPrice</code></td><td>Kulturabhängige Darstellung</td></tr>
+          <tr><td>MVC Model</td><td>Dart-Domänenklassen</td><td><code>Meal</code>, <code>MealReview</code></td><td>Fachstruktur und Werte</td></tr>
+          <tr><td>MVC View</td><td>Widgets/Pages</td><td><code>ReviewsPage</code></td><td>Modelausschnitt darstellen</td></tr>
+          <tr><td>MVC Controller</td><td>Koordinierende Logik</td><td><code>ReviewController</code></td><td>Aktionen in Modeloperationen übersetzen</td></tr>
+          <tr><td>Observer / Push</td><td><code>ChangeNotifier</code></td><td><code>notifyListeners</code></td><td>Änderung signalisiert</td></tr>
+          <tr><td>LiveData / ViewModel</td><td>beobachtbarer Controller/State-Holder</td><td>Controller plus <code>ListenableBuilder</code></td><td>ähnliche Rolle, nicht identische API</td></tr>
+          <tr><td>Repository / Connector</td><td>Datenzugriff kapseln</td><td><code>MealRepository</code></td><td>Views kennen Speicherstruktur nicht</td></tr>
+          <tr><td>Saved State</td><td>Restoration/Persistenz</td><td>noch nicht vorhanden</td><td>In-Memory-State endet beim Neustart</td></tr>
+          <tr><td>Look & Feel</td><td>Theme/Layout + Callbacks/State</td><td><code>ThemeData</code>, Widgets, Controller</td><td>statische Erscheinung plus dynamisches Verhalten</td></tr>
+        </tbody></table></div>
+
+        <div class="quiz"><p class="card-label">Selbsttest</p><h3>Warum reicht ein Java-ähnlicher Setter nicht aus, um die Oberfläche zu aktualisieren?</h3><button class="reveal-answer" type="button">Antwort zeigen</button><div class="quiz-answer"><p>Der Setter verändert nur den Wert im Modelobjekt. Flutter weiß davon noch nichts. Ein Aktualisierungssignal wie <code>notifyListeners()</code> oder <code>setState()</code> markiert den relevanten UI-Bereich für einen neuen Build. Beim Build liest die View den neuen Wert über den Getter.</p></div></div>
+      </section>
+
+      <section class="section concept-card" id="exam" data-search="exam prüfung checklist hilfe fragen answers getter setter clean architecture test debugging hot reload">
+        <div class="section-head"><div class="section-num">14</div><div><p class="eyebrow">Abrufbares Prüfungswissen</p><h2>Antwortschema, Stolperfallen und Lerncheck</h2><p class="section-intro">Gute Prüfungsantworten verbinden vier Ebenen: Definition, Zweck, Mechanismus und konkreten Projektbeleg. Die folgenden Formulierungen helfen beim strukturierten Erklären.</p></div></div>
+
+        <div class="grid-2">
+          <div class="card accent-green"><h3>Das 4-Satz-Schema</h3><ol class="mini-list"><li><strong>Definition:</strong> Was ist das Konzept?</li><li><strong>Problem:</strong> Wozu wird es benötigt?</li><li><strong>Mechanismus:</strong> Wie setzt Flutter es um?</li><li><strong>Beleg:</strong> Wo und wie nutzt CampusMensa es?</li></ol></div>
+          <div class="card accent-gold"><h3>Saubere Wortwahl</h3><ul class="mini-list"><li>„Der Controller signalisiert eine Änderung“ statt „er malt die Seite neu“.</li><li>„Widget ist eine Konfiguration“ statt „Widget ist das langlebige Objekt“.</li><li>„MVC-nah“ und Rollen begründen statt Reinheit behaupten.</li><li>„geteilte Repository-Instanz“ statt vorschnell „Singleton“.</li></ul></div>
+        </div>
+
+        <h3 style="margin-top:1.6rem">Typische Fragen – kompakte Antworten</h3>
+        <details><summary>Was passiert, wenn CampusMensa startet?</summary><p><code>main()</code> initialisiert das Binding und ruft <code>runApp()</code> auf. Flutter erzeugt <code>MyApp</code> und dessen State. In <code>initState()</code> entstehen ein gemeinsames Repository und vier Controller. <code>build()</code> konfiguriert <code>MaterialApp</code> mit Locale, Delegates, Theme und <code>NavigationShell</code>. Danach baut Flutter die erste Seite und rendert den ersten Frame.</p></details>
+        <details><summary>Warum braucht die App State?</summary><p>Ohne State könnte sie sich keine Auswahl oder Änderung merken. Beispielsweise bestimmen <code>_selectedIndex</code>, <code>_locale</code>, Gerichte, Reviews und Wochenpläne, was angezeigt und wie reagiert wird. Lokaler State wird mit <code>setState()</code>, geteilter fachlicher State über Controller und <code>notifyListeners()</code> sichtbar gemacht.</p></details>
+        <details><summary>Warum wird beim Review-Edit das Objekt verändert und nicht ersetzt?</summary><p>Die Bearbeitung ruft die Setter des bereits gespeicherten <code>MealReview</code> auf. Dadurch bleibt die Objektidentität erhalten und andere Referenzen zeigen weiterhin auf dasselbe fachliche Objekt. <code>notifyListeners()</code> veranlasst die View, die neuen Werte über Getter einzulesen.</p></details>
+        <details><summary>Wie hält die App MVC ein?</summary><p>Models kapseln Fachwerte, Views stellen sie dar und Controller übersetzen UI-Aktionen in Änderungen. Das Repository kapselt die gemeinsame Datenhaltung. Über <code>ChangeNotifier</code> entsteht ein Push-Signal zur View, die anschließend Werte pull-artig über Getter liest. Deshalb ist die Architektur praktisch MVC-nah mit Observer-Anteil.</p></details>
+        <details><summary>Wie funktioniert Localization?</summary><p>Die aktive <code>Locale</code> liegt in <code>MyApp</code> und wird an <code>MaterialApp</code> übergeben. Ein Delegate lädt <code>AppLocalizations</code>. Widgets nutzen stabile Schlüssel, um deutsche oder englische Werte zu erhalten; <code>intl</code> formatiert Preise passend zur Sprache.</p></details>
+
+        <h3 style="margin-top:1.6rem">Lerncheck</h3>
+        <div class="checklist">
+          <label class="check-item"><input type="checkbox"><span>Ich kann Widget-, Element- und Render-Baum unterscheiden.</span></label>
+          <label class="check-item"><input type="checkbox"><span>Ich kann lokalen und geteilten State mit App-Beispielen erklären.</span></label>
+          <label class="check-item"><input type="checkbox"><span>Ich kann <code>setState</code> und <code>notifyListeners</code> abgrenzen.</span></label>
+          <label class="check-item"><input type="checkbox"><span>Ich kann den App-Start lückenlos vom <code>main</code> bis zum ersten Frame erklären.</span></label>
+          <label class="check-item"><input type="checkbox"><span>Ich kann Model, View, Controller und Repository konkret zuordnen.</span></label>
+          <label class="check-item"><input type="checkbox"><span>Ich kann Push/Observer und Pull/Getter in einem Ablauf verbinden.</span></label>
+          <label class="check-item"><input type="checkbox"><span>Ich kann i18n und Localization unterscheiden.</span></label>
+          <label class="check-item"><input type="checkbox"><span>Ich kann erklären, warum das Repository kein formales Singleton ist.</span></label>
+          <label class="check-item"><input type="checkbox"><span>Ich kann Navigationsergebnisse mit <code>Future</code> und <code>await</code> erklären.</span></label>
+          <label class="check-item"><input type="checkbox"><span>Ich kann sagen, was aktuell nicht persistent gespeichert wird.</span></label>
+        </div>
+
+        <div class="quiz" style="margin-top:1rem"><p class="card-label">60-Sekunden-Challenge</p><h3>Erkläre den kompletten Datenfluss beim Bearbeiten eines Reviews.</h3><button class="reveal-answer" type="button">Musterantwort zeigen</button><div class="quiz-answer"><p>Die View öffnet den Editor mit dem vorhandenen <code>MealReview</code>. Der Dialog initialisiert seine lokalen Formularwerte über <code>getRating()</code> und <code>getMealComment()</code>. Beim Speichern gibt er reine Formdaten zurück. Die View übergibt vorhandenes Objekt und neue Werte an <code>ReviewController.updateReview()</code>. Der Controller ruft <code>setRating()</code>, <code>setMealComment()</code> und optional <code>setMealImage()</code> auf und verändert damit dasselbe Objekt. Danach sendet <code>notifyListeners()</code> ein Push-Signal. Der <code>ListenableBuilder</code> baut die Review-Liste neu; sie liest die geänderten Werte mit den Get-Methoden. Das ist MVC-nahe Trennung mit Observer-Mechanismus.</p></div></div>
+      </section>
+
+      <footer class="footer">
+        <p><strong>Quellenbasis:</strong> Vorlesungsskripte <em>web.pdf</em> und <em>mobile.pdf</em>; Projektstand der Flutter-Anwendung <em>CampusMensa</em>. Seitenangaben stehen direkt an den Kapiteln.</p>
+        <p>Dieses Cheat-Sheet unterscheidet bewusst zwischen Skriptbegriff, Flutter-Mechanismus und tatsächlich implementiertem Projektverhalten.</p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      function initializeMermaid() {
+        if (typeof mermaid === 'undefined') {
+          return;
+        }
+        var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: dark ? 'dark' : 'base',
+          securityLevel: 'loose',
+          flowchart: { useMaxWidth: false, htmlLabels: true, curve: 'basis' },
+          sequence: { useMaxWidth: false },
+          themeVariables: {
+            fontFamily: 'DM Sans, sans-serif',
+            primaryColor: dark ? '#1d2824' : '#fffdf7',
+            primaryTextColor: dark ? '#edf2ea' : '#1d2824',
+            primaryBorderColor: dark ? '#75c2a2' : '#164b3b',
+            lineColor: dark ? '#adbab2' : '#5d6862'
+          }
+        });
+        mermaid.run({ querySelector: '.mermaid' });
+      }
+
+      function setupTabs() {
+        var groups = document.querySelectorAll('[data-tabs]');
+        Array.prototype.forEach.call(groups, function (group) {
+          var buttons = group.querySelectorAll('.tab-button');
+          var panels = group.querySelectorAll('.tab-panel');
+          Array.prototype.forEach.call(buttons, function (button, index) {
+            button.addEventListener('click', function () {
+              Array.prototype.forEach.call(buttons, function (item) {
+                item.setAttribute('aria-selected', 'false');
+              });
+              Array.prototype.forEach.call(panels, function (panel) {
+                panel.classList.remove('active');
+              });
+              button.setAttribute('aria-selected', 'true');
+              panels[index].classList.add('active');
+            });
+          });
+        });
+      }
+
+      function setupSearch() {
+        var input = document.getElementById('concept-search');
+        var cards = document.querySelectorAll('.concept-card');
+        var noResults = document.getElementById('no-results');
+        input.addEventListener('input', function () {
+          var query = input.value.trim().toLowerCase();
+          var visible = 0;
+          Array.prototype.forEach.call(cards, function (card) {
+            var searchable = (card.getAttribute('data-search') + ' ' + card.textContent).toLowerCase();
+            var matches = query === '' || searchable.indexOf(query) !== -1;
+            card.classList.toggle('hidden', !matches);
+            if (matches) {
+              visible++;
+            }
+          });
+          noResults.style.display = visible === 0 ? 'block' : 'none';
+        });
+      }
+
+      function setupTheme() {
+        var button = document.getElementById('theme-toggle');
+        var saved = localStorage.getItem('flutter-cheat-theme');
+        if (saved === 'dark' || saved === 'light') {
+          document.documentElement.setAttribute('data-theme', saved);
+        }
+        button.addEventListener('click', function () {
+          var current = document.documentElement.getAttribute('data-theme');
+          var next = current === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', next);
+          localStorage.setItem('flutter-cheat-theme', next);
+        });
+      }
+
+      function setupDiagramTools() {
+        var shells = document.querySelectorAll('.diagram-shell');
+        Array.prototype.forEach.call(shells, function (shell) {
+          shell.addEventListener('click', function (event) {
+            var button = event.target.closest('[data-action]');
+            if (!button) {
+              return;
+            }
+            var action = button.getAttribute('data-action');
+            var svg = shell.querySelector('svg');
+            if (action === 'expand') {
+              shell.classList.toggle('expanded');
+              return;
+            }
+            if (!svg) {
+              return;
+            }
+            var zoom = Number(shell.getAttribute('data-zoom') || '1');
+            if (action === 'in') {
+              zoom = Math.min(2.2, zoom + 0.2);
+            }
+            if (action === 'out') {
+              zoom = Math.max(0.5, zoom - 0.2);
+            }
+            if (action === 'reset') {
+              zoom = 1;
+            }
+            shell.setAttribute('data-zoom', String(zoom));
+            svg.style.transform = 'scale(' + zoom + ')';
+          });
+        });
+      }
+
+      function setupCopyButtons() {
+        var buttons = document.querySelectorAll('.copy-code');
+        Array.prototype.forEach.call(buttons, function (button) {
+          button.addEventListener('click', function () {
+            var code = button.closest('.code-card').querySelector('code').innerText;
+            navigator.clipboard.writeText(code).then(function () {
+              var previous = button.textContent;
+              button.textContent = 'kopiert';
+              window.setTimeout(function () {
+                button.textContent = previous;
+              }, 1300);
+            });
+          });
+        });
+      }
+
+      function setupStateChooser() {
+        var answers = {
+          local: '<strong>Lokaler Widget-State.</strong> Nutze ein StatefulWidget und setState(). Beispiel: ausgewählter Navigationstab oder temporäre Sterne im Dialog.',
+          shared: '<strong>Beobachtbarer State-Holder.</strong> Nutze in dieser App einen ChangeNotifier-Controller und ListenableBuilder. Das Repository hält die gemeinsame Fachbasis.',
+          restart: '<strong>Persistente Datenquelle.</strong> Ergänze Datenbank, Datei oder sicheren Speicher. Das aktuelle In-Memory-Repository reicht dafür nicht.',
+          derived: '<strong>Nicht redundant speichern.</strong> Berechne den Wert aus vorhandenem State, wie mealCount aus der Liste der Tagesgerichte.'
+        };
+        var buttons = document.querySelectorAll('[data-state-choice]');
+        var output = document.getElementById('state-answer');
+        Array.prototype.forEach.call(buttons, function (button) {
+          button.addEventListener('click', function () {
+            Array.prototype.forEach.call(buttons, function (item) {
+              item.classList.remove('active');
+            });
+            button.classList.add('active');
+            output.innerHTML = answers[button.getAttribute('data-state-choice')];
+          });
+        });
+      }
+
+      function setupAnswers() {
+        var buttons = document.querySelectorAll('.reveal-answer');
+        Array.prototype.forEach.call(buttons, function (button) {
+          button.addEventListener('click', function () {
+            var answer = button.nextElementSibling;
+            answer.classList.toggle('show');
+            button.textContent = answer.classList.contains('show') ? 'Antwort ausblenden' : 'Antwort zeigen';
+          });
+        });
+      }
+
+      function setupNavigation() {
+        var select = document.getElementById('mobile-navigation');
+        select.addEventListener('change', function () {
+          if (select.value) {
+            document.getElementById(select.value).scrollIntoView({ behavior: 'smooth' });
+          }
+        });
+        var links = document.querySelectorAll('.side-nav a');
+        var sections = document.querySelectorAll('.section');
+        if ('IntersectionObserver' in window) {
+          var observer = new IntersectionObserver(function (entries) {
+            Array.prototype.forEach.call(entries, function (entry) {
+              if (entry.isIntersecting) {
+                Array.prototype.forEach.call(links, function (link) {
+                  link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+                });
+              }
+            });
+          }, { rootMargin: '-18% 0px -72% 0px' });
+          Array.prototype.forEach.call(sections, function (section) {
+            observer.observe(section);
+          });
+        }
+      }
+
+      setupTheme();
+      setupTabs();
+      setupSearch();
+      setupDiagramTools();
+      setupCopyButtons();
+      setupStateChooser();
+      setupAnswers();
+      setupNavigation();
+      document.getElementById('print-button').addEventListener('click', function () {
+        window.print();
+      });
+      initializeMermaid();
+    }());
+  </script>
+</body>
+</html>
